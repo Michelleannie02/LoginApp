@@ -15,7 +15,16 @@ class StartViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+        
+        if(isUserLoggedIn)
+        {
+            self.performSegue(withIdentifier: "mainView", sender: self)
+        }
+        
+    }
 
     /*
     // MARK: - Navigation

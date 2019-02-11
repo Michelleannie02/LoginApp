@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MainViewController: UIViewController {
 
@@ -16,19 +17,21 @@ class MainViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-
-    override func viewDidAppear(_ animated: Bool) {
-        
-        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
-        
-        if(!isUserLoggedIn)
-        {
-        self.performSegue(withIdentifier: "LoginView", sender: self)
+    @IBAction func Logout(_ sender: Any) {
+        do {
+            try Auth.auth().signOut()
+        }
+        catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
         }
         
-    }
-    @IBAction func Logout(_ sender: Any) {
-        self.performSegue(withIdentifier: "LoginView", sender: self)
+        self.performSegue(withIdentifier: "startView", sender: self)
+        
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        UserDefaults.standard.synchronize()
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let initial = storyboard.instantiateInitialViewController()
+//        UIApplication.shared.keyWindow?.rootViewController = initial
     }
     
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SignUpViewController: UIViewController {
 
@@ -14,10 +15,13 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var EmailTF: UITextField!
     @IBOutlet weak var PasswordTF: UITextField!
     @IBOutlet weak var ConfirmPasswordTF: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        removePartialCurlTap()
     }
     
 
@@ -30,7 +34,7 @@ class SignUpViewController: UIViewController {
         if(Email!.isEmpty || Password!.isEmpty || ConfirmPassword!.isEmpty)
         {
         // Display Alert message
-            alertMessage("All fields are required.")
+            alertMessage("Alert", "All fields are required.")
             return
         }
         
@@ -39,22 +43,33 @@ class SignUpViewController: UIViewController {
         if(Password != ConfirmPassword)
         {
             // Display Alert message
-            alertMessage("Password doesn't match.")
+            alertMessage("Alert", "Password doesn't match.")
             return
         }
         
-        // Store Data
-        UserDefaults.standard.set(Email, forKey: "Email")
-        UserDefaults.standard.set(Password, forKey: "Password")
-        
-        let alert = UIAlertController(title: "Alert", message: "Registration is successfull!", preferredStyle: UIAlertController.Style.alert)
-        
-        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default){ action in
-            self.dismiss(animated: true, completion: nil)
+        Auth.auth().createUser(withEmail: Email!, password: Password!){ (user, error) in
+            if error == nil {
+                self.performSegue(withIdentifier: "signupToMain", sender: self)
+                print("yup ;)")
+            }
+            else{
+                self.alertMessage("Error", error!.localizedDescription)
+            }
+            
         }
         
-        alert.addAction(okAction)
-        self.present(alert, animated: true, completion: nil)
+        // Store Data Locally
+//        UserDefaults.standard.set(Email, forKey: "Email")
+//        UserDefaults.standard.set(Password, forKey: "Password")
+//
+//        let alert = UIAlertController(title: "Alert", message: "Registration is successfull!", preferredStyle: UIAlertController.Style.alert)
+//
+//        let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default){ action in
+//            self.dismiss(animated: true, completion: nil)
+//        }
+//
+//        alert.addAction(okAction)
+//        self.present(alert, animated: true, completion: nil)
         
     }
     
@@ -62,8 +77,8 @@ class SignUpViewController: UIViewController {
         
         self.dismiss(animated: true, completion: nil)
     }
-    func alertMessage(_ message: String){
-        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertController.Style.alert)
+    func alertMessage(_ title: String, _ message: String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         
         let okAction = UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil)
         
@@ -72,5 +87,11 @@ class SignUpViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
         
     }
-
+    private func removePartialCurlTap() {
+        if let gestures = self.view.gestureRecognizers {
+            for gesture in gestures {
+                self.view.removeGestureRecognizer(gesture)
+            }
+        }
+    }
 }
