@@ -11,10 +11,12 @@ import FirebaseAuth
 
 class MainViewController: UIViewController {
 
+    @IBOutlet weak var helloDarkness: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        helloDarkness.text = "Hello \(SignUpViewController.GlobalVariable.username)!"
+        
     }
     
     @IBAction func Logout(_ sender: Any) {
