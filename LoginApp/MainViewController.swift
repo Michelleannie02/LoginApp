@@ -15,7 +15,10 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        helloDarkness.text = "Hello \(SignUpViewController.GlobalVariable.username)!"
+        let delimeter = "@"
+        let newstr = SignUpViewController.GlobalVariable.email
+        let token = newstr.components(separatedBy: delimeter).first
+        helloDarkness.text = "Hello "+token!+"!"
         
     }
     

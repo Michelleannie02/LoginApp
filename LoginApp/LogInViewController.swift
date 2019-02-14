@@ -22,21 +22,18 @@ class LogInViewController: UIViewController {
     }
 
     @IBAction func LoginAction(_ sender: Any) {
-        let Email = EmailTF.text
+        SignUpViewController.GlobalVariable.email = EmailTF.text!
         let Password = PasswordTF.text
         
-//        let EmailStored = UserDefaults.standard.string(forKey: "Email")
-//        let PasswordStored = UserDefaults.standard.string(forKey: "Password")
-        
         // Check for empty fields.
-        if(Email!.isEmpty || Password!.isEmpty)
+        if(SignUpViewController.GlobalVariable.email.isEmpty || Password!.isEmpty)
         {
             // Display Alert message
             alertMessage("Alert", "All fields are required.")
             return
         }
         
-        Auth.auth().signIn(withEmail: Email!, password: Password!) { (user, error) in
+        Auth.auth().signIn(withEmail: SignUpViewController.GlobalVariable.email, password: Password!) { (user, error) in
             if error == nil{
                 self.performSegue(withIdentifier: "loginToMain", sender: self)
                 
@@ -48,23 +45,6 @@ class LogInViewController: UIViewController {
                 self.alertMessage("Error" ,error!.localizedDescription)
             }
         }
-        
-        // Check if the Emails match
-//        if(EmailStored == Email)
-//        {
-//            if(PasswordStored == Password)
-//            {
-//
-//                // Login Locally
-//                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-//                UserDefaults.standard.synchronize()
-//                self.dismiss(animated: true, completion: nil)
-//            }else{
-//                alertMessage("Password is invalid.")
-//            }
-//        }else{
-//            alertMessage("Email is invalid.")
-//        }
         
         }
     func alertMessage(_ title: String, _ message: String){

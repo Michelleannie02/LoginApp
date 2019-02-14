@@ -23,7 +23,7 @@ class SignUpViewController: UIViewController {
     
     // Global Variables.
     struct GlobalVariable {
-        static var username = String()
+        static var email = String()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -33,13 +33,12 @@ class SignUpViewController: UIViewController {
 
     @IBAction func SignUpAction(_ sender: Any) {
         
-        GlobalVariable.username = UsernameTF.text!
-        let Email = EmailTF.text
+        GlobalVariable.email = EmailTF.text!
         let Password = PasswordTF.text
         let ConfirmPassword = ConfirmPasswordTF.text
         
         // Check for empty fields.
-        if(GlobalVariable.username.isEmpty || Email!.isEmpty || Password!.isEmpty || ConfirmPassword!.isEmpty)
+        if(GlobalVariable.email.isEmpty || Password!.isEmpty || ConfirmPassword!.isEmpty)
         {
         // Display Alert message
             alertMessage("Alert", "All fields are required.")
@@ -55,7 +54,7 @@ class SignUpViewController: UIViewController {
             return
         }
         
-        Auth.auth().createUser(withEmail: Email!, password: Password!){ (user, error) in
+        Auth.auth().createUser(withEmail: GlobalVariable.email, password: Password!){ (user, error) in
             if error == nil {
                 self.performSegue(withIdentifier: "signupToMain", sender: self)
             }
